@@ -6,9 +6,16 @@
     "node": ">=6.13.1",
     "npm": ">=3.10.10"
   },
-  "browserslist": [">1%", "last 4 versions", "Firefox ESR", "not ie < 9"],
+  "browserslist": [
+    ">1%",
+    "last 4 versions",
+    "Firefox ESR",
+    "not ie < 9"
+  ],
   "dependencies": {
-    "@babel/polyfill": "^7.0.0-beta.42",
+    "@babel/polyfill": "^7.0.0-beta.49",
+    "@material-ui/core": "^1.2.1",
+    "@material-ui/icons": "^1.1.0",
     "apollo-cache-inmemory": "^1.1.4",
     "apollo-client": "^2.0.4",
     "apollo-link": "^1.0.7",
@@ -136,9 +143,18 @@
     "webpack-node-externals": "^1.6.0"
   },
   "lint-staged": {
-    "*.{js,jsx}": ["eslint --no-ignore --fix", "git add --force"],
-    "*.{json,md,graphql}": ["prettier --write", "git add --force"],
-    "*.{css,less,styl,scss,sass,sss}": ["stylelint --fix", "git add --force"]
+    "*.{js,jsx}": [
+      "eslint --no-ignore --fix",
+      "git add --force"
+    ],
+    "*.{json,md,graphql}": [
+      "prettier --write",
+      "git add --force"
+    ],
+    "*.{css,less,styl,scss,sass,sss}": [
+      "stylelint --fix",
+      "git add --force"
+    ]
   },
   "scripts": {
     "precommit": "lint-staged",
