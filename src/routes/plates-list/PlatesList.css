@@ -1,0 +1,69 @@
+@import '../../components/variables.css';
+
+.root {
+  padding: 0 5%;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 0 40px;
+  max-width: var(--max-content-width);
+}
+
+.newsItem {
+  margin: 0 0 2rem;
+}
+
+.newsTitle {
+  font-size: 1.5rem;
+}
+
+.newsDesc {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: 1.125rem;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    font-size: 0.875rem;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.imageContainer {
+  text-align: center;
+  padding: 5px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  width: 50%;
+  margin: auto;
+  img {
+    width: 100%;
+  }
+}
+
+.plateContainer {
+  text-align: center;
+  width: 359px;
+  margin: auto;
+}
+
+.customFileUpload {
+  border: 1px solid #ccc;
+  background: lightblue;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  input[type="file"] {
+    display: none;
+  }
+}

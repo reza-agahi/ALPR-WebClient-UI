@@ -27,3 +27,7 @@ yarn-error.log*
 
 # Misc
 .DS_Store
+
+# images
+public/violations/plates/
+public/violations/cars/

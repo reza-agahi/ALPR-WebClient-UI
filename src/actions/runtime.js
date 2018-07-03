@@ -1,10 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 
-import { SET_RUNTIME_VARIABLE } from '../constants';
+import C from '../constants/actions';
 
 export function setRuntimeVariable({ name, value }) {
   return {
-    type: SET_RUNTIME_VARIABLE,
+    type: C.SET_RUNTIME_VARIABLE,
     payload: {
       name,
       value,

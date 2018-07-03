@@ -1,12 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import path from 'path';
 import Promise from 'bluebird';
 import express from 'express';
@@ -36,6 +27,7 @@ import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unr
 import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import config from './config';
+import initialState from './store/initialState.json';
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -63,8 +55,8 @@ app.set('trust proxy', config.trustProxy);
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: '500mb', extended: true }));
+app.use(bodyParser.json({ limit: '500mb' }));
 
 //
 // Authentication
@@ -151,9 +143,9 @@ app.get('*', async (req, res, next) => {
       graphql,
     });
 
-    const initialState = {
-      user: req.user || null,
-    };
+    // const initialState = {
+    //   user: req.user || null,
+    // };
 
     const store = configureStore(initialState, {
       cookie: req.headers.cookie,

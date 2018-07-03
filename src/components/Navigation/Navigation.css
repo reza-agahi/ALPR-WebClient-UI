@@ -1,15 +1,7 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 .root {
   float: right;
   margin: 6px 0 0;
+  direction: ltr;
 }
 
 .link {
@@ -43,4 +35,13 @@
 
 .spacer {
   color: rgba(255, 255, 255, 0.3);
+}
+
+.logoContainer {
+  /* width: 100px; */
+  height: 50px;
+  padding-left: 15px;
+  img {
+    height: 100%;
+  }
 }

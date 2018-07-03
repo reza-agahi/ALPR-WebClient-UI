@@ -1,0 +1,10 @@
+{
+  "currentPlate": {
+    "id": 0,
+    "imageSrc": "",
+    "plateCharacters": []
+  },
+  "pendingPlatesTable": [],
+  "verifiedPlatesTable": [],
+  "removedPlatesTable": []
+}

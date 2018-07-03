@@ -1,0 +1,7 @@
+.root {
+  background: url('./plate.png') no-repeat;
+  /* width: 359px; */
+  height: 75px;
+  direction: ltr;
+  position: relative;
+}

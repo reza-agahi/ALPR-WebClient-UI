@@ -32,6 +32,9 @@ module.exports = {
       `http://localhost:${process.env.PORT || 3000}`,
   },
 
+  // cameraCode
+  cameraCode: '620514',
+
   // Database
   databaseUrl: process.env.DATABASE_URL || 'sqlite:database.sqlite',
 

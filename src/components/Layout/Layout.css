@@ -1,13 +1,6 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 @import '../variables.css';
+@import './fontiran.css';
+
 
 /*
  * normalize.css is imported in JS file.
@@ -21,14 +14,17 @@
 
 html {
   color: #222;
-  font-weight: 100;
-  font-size: 1em; /* ~16px; */
-  font-family: var(--font-family-base);
+  font-weight: 400;
+  font-size: 1.3em; /* ~16px; */
+  /* font-family: var(--font-family-base); */
   line-height: 1.375; /* ~22px */
 }
 
 body {
   margin: 0;
+  direction: rtl;
+  font-family: IRANSans, 'HelveticaNeue-Light', sans-serif !important;
+  background-color: #f5f7f9;
 }
 
 a {

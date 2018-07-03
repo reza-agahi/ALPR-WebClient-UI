@@ -57,6 +57,21 @@ class Html extends React.Component {
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
           />
+          <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+          />
+          <script src="https://code.jquery.com/jquery-3.3.1.min.js" />
+          <link rel="stylesheet" href="/css/bootstrap.css" />
+          <script src="/js/bootstrap.min.js" />
+
+          <link
+            href="/icons/icomoon/styles.css"
+            rel="stylesheet"
+            type="text/css"
+          />
+          <link rel="stylesheet" href="/css/components.css" />
+          <link rel="stylesheet" href="/css/react-redux-toastr.min.css" />
 
           {styles.map(style => (
             <style

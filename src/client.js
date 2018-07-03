@@ -49,6 +49,8 @@ const context = {
   storeSubscription: null,
 };
 
+window.store = context.store;
+
 const container = document.getElementById('app');
 let currentLocation = history.location;
 let appInstance;
