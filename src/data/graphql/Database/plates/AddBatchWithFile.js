@@ -79,6 +79,7 @@ export const resolvers = {
               .split('.')[0],
             ...item,
             status: 'pending',
+            sent: false,
             date_time: correctDateTime(item.date_time),
             plate_full_address: `violations/plates/${
               item.plate_full_address.split('/').slice(-1)[0]

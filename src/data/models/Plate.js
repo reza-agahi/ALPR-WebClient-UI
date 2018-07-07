@@ -40,6 +40,10 @@ const Plate = Model.define(
     status: {
       type: DataType.ENUM('pending', 'verified', 'rejected'),
     },
+
+    sent: {
+      type: DataType.BOOLEAN,
+    },
   },
   {
     timestamps: true,

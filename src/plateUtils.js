@@ -1,3 +1,5 @@
+import persianJs from 'persianjs';
+
 // plate dictionaries ----------------------------------------------------------
 const letter_coding_map = {
   A: '01',
@@ -46,7 +48,7 @@ const letter_encoding_map_persian = {
   ب: '02',
   پ: '20',
   ت: '03',
-  چ: '04',
+  ج: '04',
   د: '05',
   س: '06',
   ص: '07',
@@ -124,4 +126,28 @@ export const correctDateTime = dateTime => {
   const timeSplittedMinute =
     timeSplitted[1].length === 1 ? `0${timeSplitted[1]}` : timeSplitted[1];
   return `${dateSplittedYear}/${dateSplittedMonth}/${dateSplittedDay} ${timeSplittedHour}:${timeSplittedMinute}`;
+};
+
+export const toEnglishCharacters = characters => {
+  const newCharacters = [];
+  for (let i = 0; i < characters.length; i++) {
+    if (i !== 2) {
+      newCharacters.push(persianJs(characters[i]).toEnglishNumber().toString());
+    } else {
+      newCharacters.push(characters[i]);
+    }
+  }
+  return newCharacters;
+};
+
+export const toPersianCharacters = characters => {
+  const newCharacters = [];
+  for (let i = 0; i < characters.length; i++) {
+    if (i !== 2) {
+      newCharacters.push(persianJs(characters[i]).englishNumber().toString());
+    } else {
+      newCharacters.push(characters[i]);
+    }
+  }
+  return newCharacters;
 };

@@ -1,7 +1,8 @@
 {
   "currentPlate": {
     "id": 0,
-    "imageSrc": "",
+    "carSrc": "",
+    "plateSrc": "",
     "plateCharacters": []
   },
   "pendingPlatesTable": [],

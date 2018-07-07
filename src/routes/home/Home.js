@@ -8,7 +8,11 @@ import Plate from '../../components/Plate';
 import { updatePlate } from '../../actions/updatePlate';
 import { getAPlate } from '../../actions/getAPlate';
 import c from './constants';
-import { convertToNajaFormat } from '../../plateUtils';
+import {
+  convertToNajaFormat,
+  toEnglishCharacters,
+  toPersianCharacters,
+} from '../../plateUtils';
 import C from '../../constants/actions';
 // import newsQuery from './news.graphql';
 import s from './Home.css';
@@ -37,7 +41,16 @@ class Home extends React.Component {
                   <Row>
                     <div className={s.imageContainer}>
                       <img
-                        src={this.props.currentPlate.imageSrc}
+                        src={this.props.currentPlate.carSrc}
+                        alt="car_image"
+                      />
+                    </div>
+                  </Row>
+                  <br />
+                  <Row>
+                    <div className={s.imageContainer}>
+                      <img
+                        src={this.props.currentPlate.plateSrc}
                         alt="car_image"
                       />
                     </div>
@@ -47,13 +60,15 @@ class Home extends React.Component {
                   <Row>
                     <div className={s.plateContainer}>
                       <Plate
-                        plateCharacters={plate.plateCharacters}
-                        onChange={plateCharacters =>
+                        plateCharacters={toPersianCharacters(
+                          plate.plateCharacters,
+                        )}
+                        onChange={plateCharacters => {
                           this.props.changeCurrentPlate({
                             ...plate,
                             plateCharacters,
-                          })
-                        }
+                          });
+                        }}
                       />
                     </div>
                   </Row>
@@ -67,7 +82,9 @@ class Home extends React.Component {
                         onClick={() =>
                           this.props.updatePlate(
                             plate.id,
-                            convertToNajaFormat(plate.plateCharacters),
+                            convertToNajaFormat(
+                              toEnglishCharacters(plate.plateCharacters),
+                            ),
                             'verified',
                           )
                         }

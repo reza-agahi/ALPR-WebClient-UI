@@ -10,6 +10,7 @@ export const getAPlate = () => dispatch => {
     databaseGetAPlate {
       id
       plate_code
+      car_full_address
       plate_full_address
     }
   }`;
@@ -29,7 +30,8 @@ export const getAPlate = () => dispatch => {
         const plate = resp.data.databaseGetAPlate;
         const payload = {};
         payload.id = plate.id;
-        payload.imageSrc = plate.plate_full_address;
+        payload.carSrc = plate.car_full_address;
+        payload.plateSrc = plate.plate_full_address;
         payload.plateCharacters = convertTo8Digit(plate.plate_code);
         dispatch({
           type: C.SET_CURRENT_PLATE,
@@ -38,7 +40,12 @@ export const getAPlate = () => dispatch => {
       } else if (!resp.errors) {
         dispatch({
           type: C.SET_CURRENT_PLATE,
-          payload: { dateTime: '0', imageSrc: '', plateCharacters: [] },
+          payload: {
+            dateTime: '0',
+            carSrc: '',
+            plateSrc: '',
+            plateCharacters: [],
+          },
         });
 
         toastr.warning(warnings.NOTIFICATION, warnings.PLATE_NOT_FOUND);

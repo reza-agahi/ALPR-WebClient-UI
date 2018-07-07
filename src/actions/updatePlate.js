@@ -37,7 +37,8 @@ export const updatePlate = ({ id, plateCode, status }) => dispatch => {
         const plate = resp.data.databaseUpdateAPlate;
         const payload = {};
         payload.id = plate.id;
-        payload.imageSrc = plate.plate_full_address;
+        payload.carSrc = plate.car_full_address;
+        payload.plateSrc = plate.plate_full_address;
         payload.plateCharacters = convertTo8Digit(plate.plate_code);
         dispatch({
           type: C.SET_CURRENT_PLATE,
@@ -51,7 +52,7 @@ export const updatePlate = ({ id, plateCode, status }) => dispatch => {
       } else {
         dispatch({
           type: C.SET_CURRENT_PLATE,
-          payload: { id: '0', plateCharacters: [], imageSrc: '' },
+          payload: { id: '0', plateCharacters: [], carSrc: '', plateSrc: '' },
         });
         toastr.warning(warnings.NOTIFICATION, warnings.PLATE_NOT_FOUND);
       }
