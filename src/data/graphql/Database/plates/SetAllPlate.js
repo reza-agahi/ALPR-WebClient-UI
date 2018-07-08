@@ -61,7 +61,7 @@ export const resolvers = {
       }
 
       // send plate information to soap server
-      const dataXML = `<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+      const dataXML = `<?xml version="1.0" encoding="UTF-8"?><soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
       <soap-env:Body>
         <ns0:addInformation xmlns:ns0="http://webservice.camera.rahvar.nrdc.com/">
           <clientCameraDTO>
@@ -104,7 +104,7 @@ export const resolvers = {
         fetch(url, {
           method: 'POST',
           headers: {
-            'content-type': 'text/xml',
+            'content-type': 'text/xml; charset:utf-8;',
           },
           body: dataXML,
         }),
