@@ -16,6 +16,7 @@ export const getAllPlates = () => dispatch => {
       violation_address
       violation_code
       status
+      warningDesc
     }
   }`;
   fetch(`/graphql`, {
@@ -47,6 +48,12 @@ export const getAllPlates = () => dispatch => {
           type: C.SET_REMOVED_PLATES_TABLE,
           payload: resp.data.databaseGetAllPlate.filter(
             item => item.status === 'rejected',
+          ),
+        });
+        dispatch({
+          type: C.SET_POSTPONED_PLATES_TABLE,
+          payload: resp.data.databaseGetAllPlate.filter(
+            item => item.status === 'postponed',
           ),
         });
       } else {

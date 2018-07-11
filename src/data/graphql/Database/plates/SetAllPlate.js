@@ -20,6 +20,7 @@ export const schema = [
     violation_address: String
     violation_code: String
     status: String
+    warningDesc: String
     updatedAt: String
     createdAt: String
   }
@@ -33,9 +34,11 @@ export const mutation = [
     # id of plate
     id: String!
     # new plate_code
-    plateCode: String! 
+    plateCode: String
     # new status
-    status: String!   
+    status: String
+    # new status
+    warningDesc: String
   ): DatabasePlate
 `,
 ];
@@ -60,14 +63,16 @@ export const resolvers = {
         throw 'Plate with this id doesnt exist';
       }
 
-      // send plate information to soap server
-      const dataXML = `<?xml version="1.0" encoding="UTF-8"?><soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+      if (args.status === 'verified') {
+        // send plate information to soap server
+        const dataXML = `<?xml version="1.0" encoding="UTF-8"?><soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
       <soap-env:Body>
         <ns0:addInformation xmlns:ns0="http://webservice.camera.rahvar.nrdc.com/">
           <clientCameraDTO>
             <ns0:cameraCode>${plate.cam_code}</ns0:cameraCode>
             <ns0:isInternal>1</ns0:isInternal>
             <ns0:password>123</ns0:password>
+            <ns0:cameraWarningDesc>${plate.warningDesc}</ns0:cameraWarningDesc>
             <ns0:plateImage>${fs
               .readFileSync(
                 path.resolve(
@@ -97,33 +102,42 @@ export const resolvers = {
     </soap-env:Envelope>
     `;
 
-      const url =
-        'http://10.30.138.12:8001/WebServiceCamera/services/AddCameraWarning?wsdl';
-      await timeout(
-        2000,
-        fetch(url, {
-          method: 'POST',
-          headers: {
-            'content-type': 'text/xml; charset:utf-8;',
-          },
-          body: dataXML,
-        }),
-      )
-        .then(response => {
-          // if ok
-          plate.updateAttributes({
-            sent: true,
-            status: args.status,
-            plate_code: args.plateCode,
+        const url =
+          'http://10.30.138.12:8001/WebServiceCamera/services/AddCameraWarning?wsdl';
+        await timeout(
+          2000,
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'content-type': 'text/xml; charset:utf-8;',
+            },
+            body: dataXML,
+          }),
+        )
+          .then(response => {
+            // if ok
+            plate.updateAttributes({
+              sent: true,
+              status: args.status,
+              plate_code: args.plateCode,
+              warningDesc: args.warningDesc,
+            });
+          })
+          .catch(error => {
+            // might be a timeout error
+            plate.updateAttributes({
+              status: 'postponed',
+              plate_code: args.plateCode,
+              warningDesc: args.warningDesc,
+            });
           });
-        })
-        .catch(error => {
-          // might be a timeout error
-          plate.updateAttributes({
-            status: args.status,
-            plate_code: args.plateCode,
-          });
+      } else {
+        plate.updateAttributes({
+          status: args.status,
+          plate_code: args.plateCode,
+          warningDesc: args.warningDesc,
         });
+      }
 
       const newPlate = await Plate.findOne({
         where: { status: 'pending' },

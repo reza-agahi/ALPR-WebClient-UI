@@ -17,6 +17,7 @@ export const schema = [
     violation_address: String
     violation_code: String
     status: String
+    warningDesc: String
     updatedAt: String
     createdAt: String
   }

@@ -6,6 +6,7 @@ import currentPlate from './currentPlate';
 import pendingPlatesTable from './pendingPlatesTable';
 import verifiedPlatesTable from './verifiedPlatesTable';
 import removedPlatesTable from './removedPlatesTable';
+import postponedPlatesTable from './postponedPlatesTable';
 
 export default combineReducers({
   user,
@@ -15,4 +16,5 @@ export default combineReducers({
   pendingPlatesTable,
   verifiedPlatesTable,
   removedPlatesTable,
+  postponedPlatesTable,
 });

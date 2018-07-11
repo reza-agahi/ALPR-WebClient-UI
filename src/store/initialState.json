@@ -3,9 +3,11 @@
     "id": 0,
     "carSrc": "",
     "plateSrc": "",
-    "plateCharacters": []
+    "plateCharacters": [],
+    "warningDesc": ""
   },
   "pendingPlatesTable": [],
   "verifiedPlatesTable": [],
-  "removedPlatesTable": []
+  "removedPlatesTable": [],
+  "postponedPlatesTable": []
 }

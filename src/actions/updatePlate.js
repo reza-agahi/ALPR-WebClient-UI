@@ -6,9 +6,9 @@ import C from '../constants/actions';
 import { convertTo8Digit } from '../plateUtils';
 import { errors, warnings } from '../constants/messages';
 
-export const updatePlate = ({ id, plateCode, status }) => dispatch => {
-  const query = `mutation($id: String!, $plateCode: String!, $status: String!) {
-    databaseUpdateAPlate(id: $id, plateCode: $plateCode, status: $status) {
+export const updatePlate = data => dispatch => {
+  const query = `mutation($id: String!, $plateCode: String, $status: String, $warningDesc: String) {
+    databaseUpdateAPlate(id: $id, plateCode: $plateCode, status: $status, warningDesc: $warningDesc) {
       id
       date_time
       cam_code
@@ -18,6 +18,7 @@ export const updatePlate = ({ id, plateCode, status }) => dispatch => {
       violation_address
       violation_code
       status
+      warningDesc
     }
   }`;
   fetch(`/graphql`, {
@@ -28,7 +29,7 @@ export const updatePlate = ({ id, plateCode, status }) => dispatch => {
     },
     body: JSON.stringify({
       query,
-      variables: { id, plateCode, status },
+      variables: data,
     }),
   })
     .then(resp => resp.json())
@@ -40,6 +41,11 @@ export const updatePlate = ({ id, plateCode, status }) => dispatch => {
         payload.carSrc = plate.car_full_address;
         payload.plateSrc = plate.plate_full_address;
         payload.plateCharacters = convertTo8Digit(plate.plate_code);
+        payload.warningDesc = plate.warningDesc;
+        payload.date_time = plate.date_time;
+        payload.cam_code = plate.cam_code;
+        payload.violation_address = plate.violation_address;
+        payload.violation_code = plate.violation_code;
         dispatch({
           type: C.SET_CURRENT_PLATE,
           payload,
@@ -52,7 +58,16 @@ export const updatePlate = ({ id, plateCode, status }) => dispatch => {
       } else {
         dispatch({
           type: C.SET_CURRENT_PLATE,
-          payload: { id: '0', plateCharacters: [], carSrc: '', plateSrc: '' },
+          payload: {
+            id: '0',
+            plateCharacters: [],
+            carSrc: '',
+            plateSrc: '',
+            warningDesc: '',
+            cam_code: '',
+            violation_address: '',
+            violation_code: '',
+          },
         });
         toastr.warning(warnings.NOTIFICATION, warnings.PLATE_NOT_FOUND);
       }

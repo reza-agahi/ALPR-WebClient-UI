@@ -18,13 +18,6 @@ class DataTable extends React.Component {
     plateType: PropTypes.string.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      expanded: false,
-    };
-  }
-
   componentDidMount() {
     // Setting datatable defaults
     $.extend($.fn.dataTable.defaults, {
@@ -78,11 +71,19 @@ class DataTable extends React.Component {
         },
         {
           width: '100px',
-          targets: this.props.plateType === 'rejected' ? [5] : [4],
+          targets:
+            this.props.plateType === 'rejected' ||
+            this.props.plateType === 'postponed'
+              ? [5]
+              : [4],
         },
         {
           orderable: false,
-          targets: this.props.plateType === 'rejected' ? [5] : [4],
+          targets:
+            this.props.plateType === 'rejected' ||
+            this.props.plateType === 'postponed'
+              ? [5]
+              : [4],
         },
       ],
       order: [1, 'asc'],
@@ -91,9 +92,9 @@ class DataTable extends React.Component {
 
   render() {
     return (
-      <Panel expanded={this.state.expanded}>
+      <Panel expanded={this.props.expanded}>
         <Panel.Heading
-          onClick={() => this.setState({ expanded: !this.state.expanded })}
+          onClick={() => this.props.changeExpansion()}
           style={{
             cursor: 'pointer',
           }}
@@ -103,7 +104,7 @@ class DataTable extends React.Component {
           </span>
           <i
             className={
-              this.state.expanded ? 'fa fa-caret-up' : 'fa fa-caret-down'
+              this.props.expanded ? 'fa fa-caret-up' : 'fa fa-caret-down'
             }
             style={{
               float: 'left',
@@ -149,17 +150,21 @@ class DataTable extends React.Component {
                           src={item.plate_full_address}
                         />
                       </td>
-                      {this.props.plateType === 'rejected' ? (
+                      {(this.props.plateType === 'rejected' ||
+                        this.props.plateType === 'postponed') && (
                         <td key={5}>
                           <Button
                             bsStyle="primary"
-                            onClick={() => this.props.goToPendingList(item)}
+                            onClick={() =>
+                              this.props.goToPendingList(
+                                item,
+                                this.props.plateType,
+                              )
+                            }
                           >
                             {c.GO_TO_PENDING_LIST}
                           </Button>
                         </td>
-                      ) : (
-                        ''
                       )}
                       <td />
                     </tr>
@@ -179,8 +184,8 @@ DataTable.defaultProps = {
 };
 
 const mapDispatch = dispatch => ({
-  goToPendingList(plate) {
-    dispatch(goToPendingList({ plate }));
+  goToPendingList(plate, itemType) {
+    dispatch(goToPendingList({ plate }, itemType));
   },
 });
 

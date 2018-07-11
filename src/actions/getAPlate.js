@@ -12,6 +12,11 @@ export const getAPlate = () => dispatch => {
       plate_code
       car_full_address
       plate_full_address
+      warningDesc
+      date_time
+      cam_code
+      violation_address
+      violation_code
     }
   }`;
   fetch(`/graphql`, {
@@ -33,6 +38,11 @@ export const getAPlate = () => dispatch => {
         payload.carSrc = plate.car_full_address;
         payload.plateSrc = plate.plate_full_address;
         payload.plateCharacters = convertTo8Digit(plate.plate_code);
+        payload.warningDesc = plate.warningDesc;
+        payload.date_time = plate.date_time;
+        payload.cam_code = plate.cam_code;
+        payload.violation_address = plate.violation_address;
+        payload.violation_code = plate.violation_code;
         dispatch({
           type: C.SET_CURRENT_PLATE,
           payload,
@@ -41,10 +51,14 @@ export const getAPlate = () => dispatch => {
         dispatch({
           type: C.SET_CURRENT_PLATE,
           payload: {
-            dateTime: '0',
+            date_time: '',
             carSrc: '',
             plateSrc: '',
             plateCharacters: [],
+            warningDesc: '',
+            cam_code: '',
+            violation_address: '',
+            violation_code: '',
           },
         });
 

@@ -16,6 +16,7 @@ export const uploadNewPlates = ({ file }) => dispatch => {
       violation_address
       violation_code
       status
+      warningDesc
     }
   }`;
   fetch(`/graphql`, {

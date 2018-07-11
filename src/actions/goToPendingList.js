@@ -5,7 +5,7 @@ import C from '../constants/actions';
 import { convertTo8Digit } from '../plateUtils';
 import { errors } from '../constants/messages';
 
-export const goToPendingList = ({ plate }) => dispatch => {
+export const goToPendingList = ({ plate }, itemType) => dispatch => {
   const query = `mutation($id: String!, $plateCode: String!, $status: String!) {
     databaseUpdateAPlate(id: $id, plateCode: $plateCode, status: $status) {
       id
@@ -36,7 +36,10 @@ export const goToPendingList = ({ plate }) => dispatch => {
           payload: plate,
         });
         dispatch({
-          type: C.REMOVE_REJECTED_PLATE,
+          type:
+            itemType === 'rejected'
+              ? C.REMOVE_REJECTED_PLATE
+              : C.REMOVE_POSTPONED_PLATE,
           payload: plate.id,
         });
       } else {

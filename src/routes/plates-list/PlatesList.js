@@ -25,7 +25,18 @@ class PlatesList extends React.Component {
     pendingPlatesTable: PropTypes.arrayOf(PropTypes.array).isRequired,
     verifiedPlatesTable: PropTypes.arrayOf(PropTypes.array).isRequired,
     removedPlatesTable: PropTypes.arrayOf(PropTypes.array).isRequired,
+    postponedPlatesTable: PropTypes.arrayOf(PropTypes.array).isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      postponedExpanded: false,
+      rejectedExpanded: false,
+      pendingExpanded: false,
+      verifiedExpanded: false,
+    };
+  }
 
   componentDidMount() {
     this.props.getAllPlates();
@@ -76,6 +87,10 @@ class PlatesList extends React.Component {
           data={this.props.pendingPlatesTable}
           header={tableColumns}
           plateType="pending"
+          changeExpansion={() =>
+            this.setState({ pendingExpanded: !this.state.pendingExpanded })
+          }
+          expanded={this.state.pendingExpanded}
         />
         <br />
         <DataTable
@@ -84,6 +99,10 @@ class PlatesList extends React.Component {
           data={this.props.verifiedPlatesTable}
           header={tableColumns}
           plateType="verified"
+          changeExpansion={() =>
+            this.setState({ verifiedExpanded: !this.state.verifiedExpanded })
+          }
+          expanded={this.state.verifiedExpanded}
         />
         <br />
         <DataTable
@@ -92,6 +111,22 @@ class PlatesList extends React.Component {
           data={this.props.removedPlatesTable}
           header={tableColumns}
           plateType="rejected"
+          changeExpansion={() =>
+            this.setState({ rejectedExpanded: !this.state.rejectedExpanded })
+          }
+          expanded={this.state.rejectedExpanded}
+        />
+        <br />
+        <DataTable
+          key={Math.random()}
+          title={c.POSTPONED_TITLE}
+          data={this.props.postponedPlatesTable}
+          header={tableColumns}
+          plateType="postponed"
+          changeExpansion={() =>
+            this.setState({ postponedExpanded: !this.state.postponedExpanded })
+          }
+          expanded={this.state.postponedExpanded}
         />
       </div>
     );
@@ -102,6 +137,7 @@ const mapState = state => ({
   pendingPlatesTable: state.pendingPlatesTable,
   verifiedPlatesTable: state.verifiedPlatesTable,
   removedPlatesTable: state.removedPlatesTable,
+  postponedPlatesTable: state.postponedPlatesTable,
 });
 
 const mapDispatch = dispatch => ({

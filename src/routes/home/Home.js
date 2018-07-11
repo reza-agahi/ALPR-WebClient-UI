@@ -1,9 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
+import persianJs from 'persianjs';
 import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import { Row, Col, Panel, Button } from 'react-bootstrap';
+import {
+  Row,
+  Col,
+  Panel,
+  Button,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  HelpBlock,
+} from 'react-bootstrap';
 import Plate from '../../components/Plate';
 import { updatePlate } from '../../actions/updatePlate';
 import { getAPlate } from '../../actions/getAPlate';
@@ -31,6 +41,8 @@ class Home extends React.Component {
 
   render() {
     const plate = this.props.currentPlate;
+    console.log(plate);
+    
     return (
       <div className={s.root}>
         <div className={s.container}>
@@ -38,6 +50,27 @@ class Home extends React.Component {
             <Panel>
               <Panel.Body>
                 <div>
+                  <div style={{ textAlign: 'center' }}>
+                    <i className="fa fa-calendar" />&nbsp;{`تاریخ تخلف: ${persianJs(
+                      plate.date_time,
+                    )
+                      .englishNumber()
+                      .toString()}`}&emsp;&emsp;
+                    <i className="fa fa-key" />&nbsp;{`کد دوربین: ${persianJs(
+                      plate.cam_code,
+                    )
+                      .englishNumber()
+                      .toString()}`}&emsp;&emsp;
+                    <i className="fa fa-circle" />&nbsp;{`کد تخلف: ${persianJs(
+                      plate.violation_code,
+                    )
+                      .englishNumber()
+                      .toString()}`}&emsp;&emsp;
+                    <i className="	fa fa-location-arrow" />&nbsp;{`محل تخلف: ${
+                      plate.violation_address
+                    }`}
+                  </div>
+                  <br />
                   <Row>
                     <div className={s.imageContainer}>
                       <img
@@ -56,7 +89,6 @@ class Home extends React.Component {
                     </div>
                   </Row>
                   <br />
-                  <br />
                   <Row>
                     <div className={s.plateContainer}>
                       <Plate
@@ -73,23 +105,59 @@ class Home extends React.Component {
                     </div>
                   </Row>
                   <br />
+                  <Row>
+                    <div style={{ width: '80%', margin: 'auto' }}>
+                      <FormGroup controlId="formControlsTextarea">
+                        <FormControl
+                          componentClass="textarea"
+                          placeholder="توضیحات"
+                          value={plate.warningDesc || ''}
+                          onChange={e => {
+                            this.props.changeCurrentPlate({
+                              ...plate,
+                              warningDesc: e.target.value,
+                            });
+                          }}
+                        />
+                      </FormGroup>
+                    </div>
+                  </Row>
                   <br />
                   <Row>
-                    <Col xs={2} xsPush={4}>
+                    <Col xs={2} xsPush={2}>
                       <Button
                         block
                         bsStyle="success"
                         onClick={() =>
-                          this.props.updatePlate(
-                            plate.id,
-                            convertToNajaFormat(
+                          this.props.updatePlate({
+                            id: plate.id,
+                            plate_code: convertToNajaFormat(
                               toEnglishCharacters(plate.plateCharacters),
                             ),
-                            'verified',
-                          )
+                            status: 'verified',
+                            warningDesc: plate.warningDesc,
+                          })
                         }
                       >
                         {c.ACCEPT}
+                      </Button>
+                    </Col>
+                    <Col xs={2} xsPush={3}>
+                      <Button
+                        block
+                        bsStyle="info"
+                        onClick={() =>
+                          this.props.updatePlate({
+                            id: plate.id,
+                            plate_code: convertToNajaFormat(
+                              toEnglishCharacters(plate.plateCharacters),
+                            ),
+                            status: 'postponed',
+                            warningDesc: plate.warningDesc,
+                          })
+                        }
+                      >
+                        {c.POSTPONED}
                       </Button>
                     </Col>
                     <Col xs={2} xsPush={4}>
@@ -97,11 +165,14 @@ class Home extends React.Component {
                         block
                         bsStyle="danger"
                         onClick={() =>
-                          this.props.updatePlate(
-                            plate.id,
-                            convertToNajaFormat(plate.plateCharacters),
-                            'rejected',
-                          )
+                          this.props.updatePlate({
+                            id: plate.id,
+                            plate_code: convertToNajaFormat(
+                              toEnglishCharacters(plate.plateCharacters),
+                            ),
+                            status: 'rejected',
+                            warningDesc: plate.warningDesc,
+                          })
                         }
                       >
                         {c.REJECT}
@@ -125,8 +196,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-  updatePlate(id, plateCode, status) {
-    dispatch(updatePlate({ id, plateCode, status }));
+  updatePlate(data) {
+    dispatch(updatePlate(data));
   },
   changeCurrentPlate(newPlate) {
     dispatch({ type: C.SET_CURRENT_PLATE, payload: newPlate });

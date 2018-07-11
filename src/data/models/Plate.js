@@ -38,11 +38,15 @@ const Plate = Model.define(
     },
 
     status: {
-      type: DataType.ENUM('pending', 'verified', 'rejected'),
+      type: DataType.ENUM('pending', 'verified', 'rejected', 'postponed'),
     },
 
     sent: {
       type: DataType.BOOLEAN,
+    },
+
+    warningDesc: {
+      type: DataType.STRING(1024),
     },
   },
   {
