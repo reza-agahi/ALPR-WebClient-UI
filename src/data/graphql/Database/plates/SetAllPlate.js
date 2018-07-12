@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 import soap from 'soap';
 import path from 'path';
 import { Plate } from 'data/models';
+import { parseString } from 'xml2js';
 import config from '../../../../config';
 import { updatePlate } from '../../../../actions/updatePlate';
 
@@ -105,13 +106,30 @@ export const resolvers = {
             body: dataXML,
           }),
         )
+          .then(response => response.text())
           .then(response => {
             // if ok
-            plate.updateAttributes({
-              sent: true,
-              status: args.status,
-              plate_code: args.plateCode,
-              warningDesc: args.warningDesc,
+            parseString(response, (err, result) => {
+              const errorCode = Number(
+                result['soap:Envelope']['soap:Body'][0][
+                  'ns1:addInformationResponse'
+                ][0].return[0]['ns1:errorCode'][0],
+              );
+              if (errorCode === 0) {
+                plate.updateAttributes({
+                  sent: true,
+                  status: args.status,
+                  plate_code: args.plateCode,
+                  warningDesc: args.warningDesc,
+                });
+              } else {
+                console.log('errorCode', errorCode)
+                plate.updateAttributes({
+                  status: 'postponed',
+                  plate_code: args.plateCode,
+                  warningDesc: args.warningDesc,
+                });
+              }
             });
           })
           .catch(error => {
