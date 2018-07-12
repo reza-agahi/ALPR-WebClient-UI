@@ -43,7 +43,13 @@ class PlatesList extends React.Component {
   }
 
   render() {
-    const tableColumns = ['محل وقوع', 'شماره پلاک', 'زمان', 'تصویر پلاک'];
+    const tableColumns = [
+      'محل وقوع',
+      'شماره پلاک',
+      'زمان',
+      'تصویر پلاک',
+      'توضیحات',
+    ];
     return (
       <div className={s.root}>
         <Panel>

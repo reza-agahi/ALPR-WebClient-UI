@@ -9,20 +9,9 @@ import { updatePlate } from '../../../../actions/updatePlate';
 
 export const schema = [
   `
-  # A user stored in the local database
-  type DatabasePlate {
-    id: String
-    date_time: String
-    cam_code: String
-    plate_code: String
-    plate_full_address: String
-    car_full_address: String
-    violation_address: String
-    violation_code: String
-    status: String
-    warningDesc: String
-    updatedAt: String
-    createdAt: String
+  type Response {
+    data: DatabasePlate
+    message: String
   }
 `,
 ];
@@ -39,7 +28,7 @@ export const mutation = [
     status: String
     # new status
     warningDesc: String
-  ): DatabasePlate
+  ): Response
 `,
 ];
 
@@ -62,6 +51,8 @@ export const resolvers = {
         // eslint-disable-next-line no-throw-literal
         throw 'Plate with this id doesnt exist';
       }
+
+      let message = '';
 
       if (args.status === 'verified') {
         // send plate information to soap server
@@ -130,6 +121,7 @@ export const resolvers = {
               plate_code: args.plateCode,
               warningDesc: args.warningDesc,
             });
+            message = 'مشکل در برقراری ارتباط با سرور راهور.';
           });
       } else {
         plate.updateAttributes({
@@ -142,7 +134,7 @@ export const resolvers = {
       const newPlate = await Plate.findOne({
         where: { status: 'pending' },
       });
-      if (newPlate) return newPlate;
+      if (newPlate) return { data: newPlate, message };
     },
   },
 };

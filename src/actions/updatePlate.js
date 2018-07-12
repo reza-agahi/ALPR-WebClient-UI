@@ -8,18 +8,21 @@ import { errors, warnings } from '../constants/messages';
 
 export const updatePlate = data => dispatch => {
   const query = `mutation($id: String!, $plateCode: String, $status: String, $warningDesc: String) {
-    databaseUpdateAPlate(id: $id, plateCode: $plateCode, status: $status, warningDesc: $warningDesc) {
-      id
-      date_time
-      cam_code
-      plate_code
-      plate_full_address
-      car_full_address
-      violation_address
-      violation_code
-      status
-      warningDesc
-    }
+      databaseUpdateAPlate(id: $id, plateCode: $plateCode, status: $status, warningDesc: $warningDesc) {
+        data {
+          id
+          date_time
+          cam_code
+          plate_code
+          plate_full_address
+          car_full_address
+          violation_address
+          violation_code
+          status
+          warningDesc
+        }
+        message
+      }
   }`;
   fetch(`/graphql`, {
     method: 'POST',
@@ -34,8 +37,10 @@ export const updatePlate = data => dispatch => {
   })
     .then(resp => resp.json())
     .then(resp => {
+      console.log(resp);
+
       if (resp.data.databaseUpdateAPlate) {
-        const plate = resp.data.databaseUpdateAPlate;
+        const plate = resp.data.databaseUpdateAPlate.data;
         const payload = {};
         payload.id = plate.id;
         payload.carSrc = plate.car_full_address;
@@ -50,6 +55,13 @@ export const updatePlate = data => dispatch => {
           type: C.SET_CURRENT_PLATE,
           payload,
         });
+        if (resp.data.databaseUpdateAPlate.message.length > 0)
+          toastr.error(
+            errors.PLATE_UPDATE_TITLE,
+            `${
+              resp.data.databaseUpdateAPlate.message
+            } تخلف به لیست تخلفات تعویق افتاده اضافه شد.`,
+          );
       } else if (resp.errors) {
         toastr.error(
           errors.PLATE_UPDATE_TITLE,

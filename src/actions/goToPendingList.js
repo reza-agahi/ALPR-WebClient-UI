@@ -8,9 +8,11 @@ import { errors } from '../constants/messages';
 export const goToPendingList = ({ plate }, itemType) => dispatch => {
   const query = `mutation($id: String!, $plateCode: String!, $status: String!) {
     databaseUpdateAPlate(id: $id, plateCode: $plateCode, status: $status) {
-      id
-      plate_code
-      car_full_address
+      data {
+        id
+        plate_code
+        car_full_address
+      }
     }
   }`;
   fetch(`/graphql`, {
@@ -30,7 +32,9 @@ export const goToPendingList = ({ plate }, itemType) => dispatch => {
   })
     .then(resp => resp.json())
     .then(resp => {
-      if (resp.data.databaseUpdateAPlate) {
+      console.log(resp);
+      
+      if (resp.data.databaseUpdateAPlate.data) {
         dispatch({
           type: C.ADD_PENDING_PLATE,
           payload: plate,

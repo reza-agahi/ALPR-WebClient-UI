@@ -27,7 +27,11 @@ class DataTable extends React.Component {
         {
           orderable: false,
           width: '100px',
-          targets: this.props.plateType === 'rejected' ? [5] : [4],
+          targets:
+            this.props.plateType === 'rejected' ||
+            this.props.plateType === 'postponed'
+              ? [6]
+              : [5],
         },
       ],
       dom:
@@ -74,16 +78,16 @@ class DataTable extends React.Component {
           targets:
             this.props.plateType === 'rejected' ||
             this.props.plateType === 'postponed'
-              ? [5]
-              : [4],
+              ? [6]
+              : [5],
         },
         {
           orderable: false,
           targets:
             this.props.plateType === 'rejected' ||
             this.props.plateType === 'postponed'
-              ? [5]
-              : [4],
+              ? [6]
+              : [5],
         },
       ],
       order: [1, 'asc'],
@@ -150,9 +154,10 @@ class DataTable extends React.Component {
                           src={item.plate_full_address}
                         />
                       </td>
+                      <td key={5}>{item.warningDesc}</td>
                       {(this.props.plateType === 'rejected' ||
                         this.props.plateType === 'postponed') && (
-                        <td key={5}>
+                        <td key={6}>
                           <Button
                             bsStyle="primary"
                             onClick={() =>
