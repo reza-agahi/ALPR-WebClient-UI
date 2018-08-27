@@ -37,8 +37,6 @@ export const updatePlate = data => dispatch => {
   })
     .then(resp => resp.json())
     .then(resp => {
-      console.log(resp);
-
       if (resp.data.databaseUpdateAPlate) {
         const plate = resp.data.databaseUpdateAPlate.data;
         const payload = {};

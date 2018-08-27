@@ -48,7 +48,7 @@ export const resolvers = {
           zipEntry.isDirectory === false
         ) {
           fs.writeFile(
-            `public/violations/plates/${zipEntry.name}`,
+            `build/public/violations/plates/${zipEntry.name}`,
             zip.readFile(zipEntry.entryName),
             'binary',
             err => {
@@ -61,7 +61,7 @@ export const resolvers = {
           zipEntry.isDirectory === false
         ) {
           fs.writeFile(
-            `public/violations/cars/${zipEntry.name}`,
+            `build/public/violations/cars/${zipEntry.name}`,
             zip.readFile(zipEntry.entryName),
             'binary',
             err => {

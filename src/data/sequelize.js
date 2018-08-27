@@ -13,6 +13,8 @@ import config from '../config';
 const sequelize = new Sequelize(config.databaseUrl, {
   define: {
     freezeTableName: true,
+    charset: 'utf8',
+    collate: 'utf8_general_ci',
   },
 });
 

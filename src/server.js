@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphql } from 'graphql';
+import fs from 'fs';
 import expressGraphQL from 'express-graphql';
 import jwt from 'jsonwebtoken';
 import nodeFetch from 'node-fetch';
@@ -12,6 +13,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { getDataFromTree } from 'react-apollo';
 import PrettyError from 'pretty-error';
+// import xmlparser from 'express-xml-bodyparser';
 import createApolloClient from './core/createApolloClient';
 import App from './components/App';
 import Html from './components/Html';
@@ -28,6 +30,18 @@ import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import config from './config';
 import initialState from './store/initialState.json';
+
+if (!fs.existsSync('build/public/violations')) {
+  fs.mkdirSync('build/public/violations');
+}
+
+if (!fs.existsSync('build/public/violations/cars')) {
+  fs.mkdirSync('build/public/violations/cars');
+}
+
+if (!fs.existsSync('build/public/violations/plates')) {
+  fs.mkdirSync('build/public/violations/plates');
+}
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -57,6 +71,7 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ limit: '500mb', extended: true }));
 app.use(bodyParser.json({ limit: '500mb' }));
+// app.use(xmlparser());
 
 //
 // Authentication
@@ -80,6 +95,20 @@ app.use((err, req, res, next) => {
 });
 
 app.use(passport.initialize());
+
+
+// app.post('/tmp', (req, res) => {
+//   console.log('tmpppppp');
+//   console.log(JSON.stringify(req.body));
+//   fs.writeFile('./tmp2.txt', JSON.stringify(req.body), err => {
+//     if (err) {
+//       return console.log(err);
+//     }
+
+//     console.log('The file was saved!');
+//   });
+//   res.send('<xml!><salam>ss</salam>');
+// });
 
 app.get(
   '/login/facebook',

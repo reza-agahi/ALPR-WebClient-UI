@@ -69,7 +69,7 @@ export const resolvers = {
               .readFileSync(
                 path.resolve(
                   __dirname,
-                  `../public/${plate.plate_full_address}`,
+                  `../build/public/${plate.plate_full_address}`,
                 ),
               )
               .toString('base64')}</ns0:plateImage>
@@ -78,7 +78,10 @@ export const resolvers = {
             <ns0:userName>tbzws_gtehran</ns0:userName>
             <ns0:vehicleImage>${fs
               .readFileSync(
-                path.resolve(__dirname, `../public/${plate.car_full_address}`),
+                path.resolve(
+                  __dirname,
+                  `../build/public/${plate.car_full_address}`,
+                ),
               )
               .toString('base64')}</ns0:vehicleImage>
             <violationAddress>${plate.violation_address}</violationAddress>
@@ -123,7 +126,10 @@ export const resolvers = {
                   warningDesc: args.warningDesc,
                 });
               } else {
-                console.log('errorCode', errorCode)
+                if (errorCode === 200) {
+                  message = 'این تخلف قبلا به سرور راهور ارسال شده است.';
+                }
+                console.log('errorCode', errorCode);
                 plate.updateAttributes({
                   status: 'postponed',
                   plate_code: args.plateCode,
