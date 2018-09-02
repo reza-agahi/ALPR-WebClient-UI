@@ -57,54 +57,98 @@ export const resolvers = {
 
       if (args.status === 'verified') {
         // send plate information to soap server
-        const dataXML = `<?xml version="1.0" encoding="UTF-8"?><soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
-      <soap-env:Body>
-        <ns0:addInformation xmlns:ns0="http://webservice.camera.rahvar.nrdc.com/">
-          <clientCameraDTO>
-            <ns0:cameraCode>${plate.cam_code}</ns0:cameraCode>
-            <ns0:isInternal>1</ns0:isInternal>
-            <ns0:password>123</ns0:password>
-            <ns0:cameraWarningDesc>${plate.warningDesc}</ns0:cameraWarningDesc>
-            <ns0:plateImage>${fs
+        const dataXML = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://webservice.camera.rahvar.nrdc.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <web:addInformation>
+         <clientCameraDTO>
+            <!--Optional:-->
+            <web:cameraCode>${plate.cam_code}</web:cameraCode>
+            <!--Optional:-->
+            <web:cameraWarningDesc>${plate.warningDesc}</web:cameraWarningDesc>
+            <!--Optional:-->
+            <web:clientCameraDTO/>
+            <!--Optional:-->
+            <colorCode>?</colorCode>
+            <!--Optional:-->
+            <confirmDate>?</confirmDate>
+            <!--Optional:-->
+            <confirmId>?</confirmId>
+            <!--Optional:-->
+            <web:errorCode>?</web:errorCode>
+            <!--Optional:-->
+            <web:isInternal>1</web:isInternal>
+            <!--Optional:-->
+            <web:message></web:message>
+            <!--Optional:-->
+            <web:password>123@car</web:password>
+            <!--Optional:-->
+            <web:plateImage>${fs
               .readFileSync(
                 path.resolve(
                   __dirname,
                   `../build/public/${plate.plate_full_address}`,
                 ),
               )
-              .toString('base64')}</ns0:plateImage>
-            <ns0:plateNo>${plate.plate_code}</ns0:plateNo>
-            <ns0:speed>0</ns0:speed>
-            <ns0:userName>tbzws_gtehran</ns0:userName>
-            <ns0:vehicleImage>${fs
+              .toString('base64')}</web:plateImage>
+            <!--Optional:-->
+            <web:plateImageConvert>cid:1399079069374</web:plateImageConvert>
+            <!--Optional:-->
+            <web:plateNo>${plate.plate_code}</web:plateNo>
+            <!--Optional:-->
+            <web:speed>0</web:speed>
+            <!--Optional:-->
+            <systemCode>?</systemCode>
+            <!--Optional:-->
+            <usageCode>?</usageCode>
+            <!--Optional:-->
+            <userId>?</userId>
+            <!--Optional:-->
+            <web:userName>mznws_babol</web:userName>
+            <!--Optional:-->
+            <web:vehicleColor>?</web:vehicleColor>
+            <!--Optional:-->
+            <web:vehicleImage>${fs
               .readFileSync(
                 path.resolve(
                   __dirname,
                   `../build/public/${plate.car_full_address}`,
                 ),
               )
-              .toString('base64')}</ns0:vehicleImage>
+              .toString('base64')}</web:vehicleImage>
+            <!--Optional:-->
+            <web:vehicleImageConvert>cid:449917414602</web:vehicleImageConvert>
+            <!--Optional:-->
+            <web:vehicleSystem>?</web:vehicleSystem>
+            <!--Optional:-->
+            <web:vehicleUsage>?</web:vehicleUsage>
+            <!--Optional:-->
+            <web:version>?</web:version>
+            <!--Optional:-->
             <violationAddress>${plate.violation_address}</violationAddress>
-            <ns0:violationOccureDate>${
+            <!--Optional:-->
+            <web:violationOccureDate>${
               plate.date_time
-            }</ns0:violationOccureDate>
-            <ns0:violationTypeCode>${
+            }</web:violationOccureDate>
+            <!--Optional:-->
+            <web:violationTypeCode>${
               plate.violation_code
-            }</ns0:violationTypeCode>
-          </clientCameraDTO>
-        </ns0:addInformation>
-      </soap-env:Body>
-    </soap-env:Envelope>
-    `;
+            }</web:violationTypeCode>
+            <!--Optional:-->
+            <web:warningId>?</web:warningId>
+         </clientCameraDTO>
+      </web:addInformation>
+   </soapenv:Body>
+</soapenv:Envelope>`;
 
         const url =
           'http://10.30.138.12:8001/WebServiceCamera/services/AddCameraWarning?wsdl';
         await timeout(
-          2000,
+          5000,
           fetch(url, {
             method: 'POST',
             headers: {
-              'content-type': 'text/xml; charset:utf-8;',
+              'Content-Type': 'text/xml;charset=UTF-8',
             },
             body: dataXML,
           }),
@@ -113,10 +157,11 @@ export const resolvers = {
           .then(response => {
             // if ok
             parseString(response, (err, result) => {
+              console.log(JSON.stringify(result));
               const errorCode = Number(
                 result['soap:Envelope']['soap:Body'][0][
                   'ns1:addInformationResponse'
-                ][0].return[0]['ns1:errorCode'][0],
+                ][0].return[0]['ns2:errorCode'][0],
               );
               if (errorCode === 0) {
                 plate.updateAttributes({
