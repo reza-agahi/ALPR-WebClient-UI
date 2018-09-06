@@ -7,8 +7,8 @@ import { convertTo8Digit } from '../plateUtils';
 import { errors, warnings } from '../constants/messages';
 
 export const updatePlate = data => dispatch => {
-  const query = `mutation($id: String!, $plateCode: String, $status: String, $warningDesc: String) {
-      databaseUpdateAPlate(id: $id, plateCode: $plateCode, status: $status, warningDesc: $warningDesc) {
+  const query = `mutation($id: String!, $plateCode: String, $status: String, $warningDesc: String, $violation_code: String) {
+      databaseUpdateAPlate(id: $id, plateCode: $plateCode, status: $status, warningDesc: $warningDesc, violation_code: $violation_code) {
         data {
           id
           date_time

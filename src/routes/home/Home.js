@@ -42,7 +42,7 @@ class Home extends React.Component {
   render() {
     const plate = this.props.currentPlate;
     console.log(plate);
-    
+
     return (
       <div className={s.root}>
         <div className={s.container}>
@@ -61,11 +61,22 @@ class Home extends React.Component {
                     )
                       .englishNumber()
                       .toString()}`}&emsp;&emsp;
-                    <i className="fa fa-circle" />&nbsp;{`کد تخلف: ${persianJs(
-                      plate.violation_code,
-                    )
-                      .englishNumber()
-                      .toString()}`}&emsp;&emsp;
+                    <i className="fa fa-circle" />&nbsp;{'کد تخلف: '}
+                    <input
+                      type="text"
+                      value={persianJs(plate.violation_code)
+                        .englishNumber()
+                        .toString()}
+                      size="4"
+                      onChange={e => {
+                        this.props.changeCurrentPlate({
+                          ...plate,
+                          violation_code: persianJs(e.target.value)
+                            .toEnglishNumber()
+                            .toString(),
+                        });
+                      }}
+                    />&emsp;&emsp;
                     <i className="	fa fa-location-arrow" />&nbsp;{`محل تخلف: ${
                       plate.violation_address
                     }`}
@@ -136,6 +147,7 @@ class Home extends React.Component {
                             ),
                             status: 'verified',
                             warningDesc: plate.warningDesc,
+                            violation_code: plate.violation_code,
                           })
                         }
                       >
@@ -154,6 +166,7 @@ class Home extends React.Component {
                             ),
                             status: 'postponed',
                             warningDesc: plate.warningDesc,
+                            violation_code: plate.violation_code,
                           })
                         }
                       >
@@ -172,6 +185,7 @@ class Home extends React.Component {
                             ),
                             status: 'rejected',
                             warningDesc: plate.warningDesc,
+                            violation_code: plate.violation_code,
                           })
                         }
                       >

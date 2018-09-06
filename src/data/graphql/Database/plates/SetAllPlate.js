@@ -29,6 +29,8 @@ export const mutation = [
     status: String
     # new status
     warningDesc: String
+    # violation code
+    violation_code: String
   ): Response
 `,
 ];
@@ -169,6 +171,7 @@ export const resolvers = {
                   status: args.status,
                   plate_code: args.plateCode,
                   warningDesc: args.warningDesc,
+                  violation_code: args.violation_code,
                 });
               } else {
                 if (errorCode === 200) {
@@ -179,6 +182,7 @@ export const resolvers = {
                   status: 'postponed',
                   plate_code: args.plateCode,
                   warningDesc: args.warningDesc,
+                  violation_code: args.violation_code,
                 });
               }
             });
@@ -189,6 +193,7 @@ export const resolvers = {
               status: 'postponed',
               plate_code: args.plateCode,
               warningDesc: args.warningDesc,
+              violation_code: args.violation_code,
             });
             message = 'مشکل در برقراری ارتباط با سرور راهور.';
           });
@@ -197,6 +202,7 @@ export const resolvers = {
           status: args.status,
           plate_code: args.plateCode,
           warningDesc: args.warningDesc,
+          violation_code: args.violation_code,
         });
       }
 
