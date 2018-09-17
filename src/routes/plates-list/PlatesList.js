@@ -147,8 +147,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-  updatePlate(id, plateCode, status) {
-    dispatch(updatePlate({ id, plateCode, status }));
+  updatePlate(id, plate_code, status) {
+    dispatch(updatePlate({ id, plate_code, status }));
   },
   changeCurrentPlate(newPlate) {
     dispatch({ type: C.SET_CURRENT_PLATE, payload: newPlate });

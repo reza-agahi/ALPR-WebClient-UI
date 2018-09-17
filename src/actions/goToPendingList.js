@@ -6,8 +6,8 @@ import { convertTo8Digit } from '../plateUtils';
 import { errors } from '../constants/messages';
 
 export const goToPendingList = ({ plate }, itemType) => dispatch => {
-  const query = `mutation($id: String!, $plateCode: String!, $status: String!) {
-    databaseUpdateAPlate(id: $id, plateCode: $plateCode, status: $status) {
+  const query = `mutation($id: String!, $plate_code: String!, $status: String!) {
+    databaseUpdateAPlate(id: $id, plate_code: $plate_code, status: $status) {
       data {
         id
         plate_code
@@ -25,7 +25,7 @@ export const goToPendingList = ({ plate }, itemType) => dispatch => {
       query,
       variables: {
         id: plate.id,
-        plateCode: plate.plate_code,
+        plate_code: plate.plate_code,
         status: 'pending',
       },
     }),

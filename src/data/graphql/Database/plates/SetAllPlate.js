@@ -24,13 +24,17 @@ export const mutation = [
     # id of plate
     id: String!
     # new plate_code
-    plateCode: String
+    plate_code: String
     # new status
     status: String
     # new status
     warningDesc: String
     # violation code
     violation_code: String
+    # violation address
+    violation_address: String
+    # camera code
+    cam_code: String
   ): Response
 `,
 ];
@@ -47,6 +51,7 @@ function timeout(ms, promise) {
 export const resolvers = {
   Mutation: {
     async databaseUpdateAPlate(parent, args) {
+      console.log("args: ", args);
       // If plate does'nt exists, throw error
       const plate = await Plate.find({ where: { id: args.id } });
 
@@ -65,9 +70,9 @@ export const resolvers = {
       <web:addInformation>
          <clientCameraDTO>
             <!--Optional:-->
-            <web:cameraCode>${plate.cam_code}</web:cameraCode>
+            <web:cameraCode>${args.cam_code}</web:cameraCode>
             <!--Optional:-->
-            <web:cameraWarningDesc>${plate.warningDesc}</web:cameraWarningDesc>
+            <web:cameraWarningDesc>${args.warningDesc}</web:cameraWarningDesc>
             <!--Optional:-->
             <web:clientCameraDTO/>
             <!--Optional:-->
@@ -96,7 +101,7 @@ export const resolvers = {
             <!--Optional:-->
             <web:plateImageConvert>cid:1399079069374</web:plateImageConvert>
             <!--Optional:-->
-            <web:plateNo>${plate.plate_code}</web:plateNo>
+            <web:plateNo>${args.plate_code}</web:plateNo>
             <!--Optional:-->
             <web:speed>0</web:speed>
             <!--Optional:-->
@@ -127,14 +132,14 @@ export const resolvers = {
             <!--Optional:-->
             <web:version>?</web:version>
             <!--Optional:-->
-            <violationAddress>${plate.violation_address}</violationAddress>
+            <violationAddress>${args.violation_address}</violationAddress>
             <!--Optional:-->
             <web:violationOccureDate>${
               plate.date_time
             }</web:violationOccureDate>
             <!--Optional:-->
             <web:violationTypeCode>${
-              plate.violation_code
+              args.violation_code
             }</web:violationTypeCode>
             <!--Optional:-->
             <web:warningId>?</web:warningId>
@@ -169,20 +174,87 @@ export const resolvers = {
                 plate.updateAttributes({
                   sent: true,
                   status: args.status,
-                  plate_code: args.plateCode,
+                  plate_code: args.plate_code,
                   warningDesc: args.warningDesc,
                   violation_code: args.violation_code,
+                  violation_address: args.violation_address,
+                  cam_code: args.cam_code,
                 });
               } else {
-                if (errorCode === 200) {
-                  message = 'این تخلف قبلا به سرور راهور ارسال شده است.';
+                switch (errorCode) {
+                  case 100:
+                    message = 'کد دوربین تعریف نشده یا اشتباه وارد شده است.';
+                    break;
+                  case 200:
+                    message = 'اطلاعات ورودی اشتباه یا رکورد تکراری است.';
+                    break;
+                  case 300:
+                    message = 'مشکل در درج اطلاعات';
+                    break;
+                  case 400:
+                    message = 'مشکل در ارتباط';
+                    break;
+                  case 500:
+                    message = 'مشکل در اعتبار سنجی';
+                    break;
+                  case 10:
+                    message = 'نام کاربری اشتباه است.';
+                    break;
+                  case 20:
+                    message = 'کلمه عبور اشتباه است.';
+                    break;
+                  case 30:
+                    message = 'کاربر غیر فعال است.';
+                    break;
+                  case 40:
+                    message = 'کاربر دسترسی ندارد.';
+                    break;
+                  case 600:
+                    message = 'تصویر پلاک وارد نشده است.';
+                    break;
+                  case 605:
+                    message =
+                      'اندازه تصویر پلاک از ۵۰ کیلوبایت بالاتر می‌باشد.';
+                    break;
+                  case 610:
+                    message = 'تصویر خودرو وارد نشده است.';
+                    break;
+                  case 615:
+                    message =
+                      'اندازه تصویر پلاک از ۳۰۰ کیلوبایت بالاتر می‌باشد.';
+                    break;
+                  case 620:
+                    message = 'کد دوربین وارد نشده است.';
+                    break;
+                  case 625:
+                    message = 'پلاک وارد نشده است.';
+                    break;
+                  case 630:
+                    message = 'نام کاربری وارد نشده است.';
+                    break;
+                  case 635:
+                    message = 'کلمه عبور وارد نشده است.';
+                    break;
+                  case 640:
+                    message = 'سرعت وارد نشده است.';
+                    break;
+                  case 645:
+                    message = 'تاریخ تخلف وارد نشده است.';
+                    break;
+                  case 650:
+                    message = 'نوع تخلف وارد نشده است.';
+                    break;
+                  default:
+                    break;
                 }
                 console.log('errorCode', errorCode);
                 plate.updateAttributes({
                   status: 'postponed',
-                  plate_code: args.plateCode,
+                  plate_code: args.plate_code,
                   warningDesc: args.warningDesc,
                   violation_code: args.violation_code,
+                  violation_address: args.violation_address,
+                  cam_code: args.cam_code,
                 });
               }
             });
@@ -191,18 +263,22 @@ export const resolvers = {
             // might be a timeout error
             plate.updateAttributes({
               status: 'postponed',
-              plate_code: args.plateCode,
+              plate_code: args.plate_code,
               warningDesc: args.warningDesc,
               violation_code: args.violation_code,
+              violation_address: args.violation_address,
+              cam_code: args.cam_code,
             });
             message = 'مشکل در برقراری ارتباط با سرور راهور.';
           });
       } else {
         plate.updateAttributes({
           status: args.status,
-          plate_code: args.plateCode,
+          plate_code: args.plate_code,
           warningDesc: args.warningDesc,
           violation_code: args.violation_code,
+          violation_address: args.violation_address,
+          cam_code: args.cam_code,
         });
       }
 

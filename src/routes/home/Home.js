@@ -56,11 +56,22 @@ class Home extends React.Component {
                     )
                       .englishNumber()
                       .toString()}`}&emsp;&emsp;
-                    <i className="fa fa-key" />&nbsp;{`کد دوربین: ${persianJs(
-                      plate.cam_code,
-                    )
-                      .englishNumber()
-                      .toString()}`}&emsp;&emsp;
+                    <i className="fa fa-circle" />&nbsp;{'کد دوربین: '}
+                    <input
+                      type="text"
+                      value={persianJs(plate.cam_code)
+                        .englishNumber()
+                        .toString()}
+                      size="4"
+                      onChange={e => {
+                        this.props.changeCurrentPlate({
+                          ...plate,
+                          cam_code: persianJs(e.target.value)
+                            .toEnglishNumber()
+                            .toString(),
+                        });
+                      }}
+                    />&emsp;&emsp;
                     <i className="fa fa-circle" />&nbsp;{'کد تخلف: '}
                     <input
                       type="text"
@@ -77,9 +88,18 @@ class Home extends React.Component {
                         });
                       }}
                     />&emsp;&emsp;
-                    <i className="	fa fa-location-arrow" />&nbsp;{`محل تخلف: ${
-                      plate.violation_address
-                    }`}
+                    <i className="fa fa-circle" />&nbsp;{'محل تخلف: '}
+                    <input
+                      type="text"
+                      value={plate.violation_address}
+                      size="15"
+                      onChange={e => {
+                        this.props.changeCurrentPlate({
+                          ...plate,
+                          violation_address: e.target.value,
+                        });
+                      }}
+                    />
                   </div>
                   <br />
                   <Row>
@@ -148,6 +168,8 @@ class Home extends React.Component {
                             status: 'verified',
                             warningDesc: plate.warningDesc,
                             violation_code: plate.violation_code,
+                            violation_address: plate.violation_address,
+                            cam_code: plate.cam_code,
                           })
                         }
                       >
@@ -167,6 +189,8 @@ class Home extends React.Component {
                             status: 'postponed',
                             warningDesc: plate.warningDesc,
                             violation_code: plate.violation_code,
+                            violation_address: plate.violation_address,
+                            cam_code: plate.cam_code,
                           })
                         }
                       >
@@ -186,6 +210,8 @@ class Home extends React.Component {
                             status: 'rejected',
                             warningDesc: plate.warningDesc,
                             violation_code: plate.violation_code,
+                            violation_address: plate.violation_address,
+                            cam_code: plate.cam_code,
                           })
                         }
                       >
