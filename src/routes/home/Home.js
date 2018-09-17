@@ -39,10 +39,58 @@ class Home extends React.Component {
     this.props.getAPlate();
   }
 
+  componentDidUpdate() {
+    const plate = this.props.currentPlate;
+    window.onkeypress = e => {
+      switch (e.keyCode) {
+        case 13:
+          this.props.updatePlate({
+            id: plate.id,
+            plate_code: convertToNajaFormat(
+              toEnglishCharacters(plate.plateCharacters),
+            ),
+            status: 'verified',
+            warningDesc: plate.warningDesc,
+            violation_code: plate.violation_code,
+            violation_address: plate.violation_address,
+            cam_code: plate.cam_code,
+          });
+          break;
+        case 127:
+          this.props.updatePlate({
+            id: plate.id,
+            plate_code: convertToNajaFormat(
+              toEnglishCharacters(plate.plateCharacters),
+            ),
+            status: 'rejected',
+            warningDesc: plate.warningDesc,
+            violation_code: plate.violation_code,
+            violation_address: plate.violation_address,
+            cam_code: plate.cam_code,
+          });
+          break;
+        case 32:
+          this.props.updatePlate({
+            id: plate.id,
+            plate_code: convertToNajaFormat(
+              toEnglishCharacters(plate.plateCharacters),
+            ),
+            status: 'postponed',
+            warningDesc: plate.warningDesc,
+            violation_code: plate.violation_code,
+            violation_address: plate.violation_address,
+            cam_code: plate.cam_code,
+          });
+          break;
+
+        default:
+          break;
+      }
+    };
+  }
+
   render() {
     const plate = this.props.currentPlate;
-    console.log(plate);
-
     return (
       <div className={s.root}>
         <div className={s.container}>
@@ -121,38 +169,40 @@ class Home extends React.Component {
                   </Row>
                   <br />
                   <Row>
-                    <div className={s.plateContainer}>
-                      <Plate
-                        plateCharacters={toPersianCharacters(
-                          plate.plateCharacters,
-                        )}
-                        onChange={plateCharacters => {
-                          this.props.changeCurrentPlate({
-                            ...plate,
-                            plateCharacters,
-                          });
-                        }}
-                      />
-                    </div>
-                  </Row>
-                  <br />
-                  <Row>
-                    <div style={{ width: '80%', margin: 'auto' }}>
-                      <FormGroup controlId="formControlsTextarea">
-                        <FormControl
-                          componentClass="textarea"
-                          placeholder="توضیحات"
-                          value={plate.warningDesc || ''}
-                          onChange={e => {
+                    <Col xs={6}>
+                      <div style={{ width: '90%', margin: 'auto' }}>
+                        <FormGroup controlId="formControlsTextarea">
+                          <FormControl
+                            componentClass="textarea"
+                            placeholder="توضیحات"
+                            value={plate.warningDesc || ''}
+                            onChange={e => {
+                              this.props.changeCurrentPlate({
+                                ...plate,
+                                warningDesc: e.target.value,
+                              });
+                            }}
+                          />
+                        </FormGroup>
+                      </div>
+                    </Col>
+                    <Col xs={6}>
+                      <div className={s.plateContainer}>
+                        <Plate
+                          plateCharacters={toPersianCharacters(
+                            plate.plateCharacters,
+                          )}
+                          onChange={plateCharacters => {
                             this.props.changeCurrentPlate({
                               ...plate,
-                              warningDesc: e.target.value,
+                              plateCharacters,
                             });
                           }}
                         />
-                      </FormGroup>
-                    </div>
+                      </div>
+                    </Col>
                   </Row>
+                  <br />
                   <br />
                   <Row>
                     <Col xs={2} xsPush={2}>
